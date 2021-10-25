@@ -1,0 +1,78 @@
+{
+    "40001":{
+        "text":"정의되지 않은 오류",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40002":{
+        "text":"잘못된 접근",
+        "reason":"NOT_ALLOWED_ACCESS"
+    },
+    "40003":{
+        "text":"이미 존재하는 아이디",
+        "reason":"ALREADY_EXISTS_ID"
+    },
+    "40004":{
+        "text":"이메일 인증 필요",
+        "reason":"EMAIL_AUTH_NEEDED"
+    },
+    "40005":{
+        "text":"인증 번호가 다릅니다.",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40006":{
+        "text":"인증 시간 만료",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40007":{
+        "text":"비밀번호 틀림",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40008":{
+        "text":"존재하지 않는 id",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40009":{
+        "text":"잘못된 인증",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40010":{
+        "text":"로그인 먼저 하시오",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40011":{
+        "text":"로그인 먼저 하시오",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40012":{
+        "text":"로그인 먼저 하시오",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40013":{
+        "text":"로그인 먼저 하시오",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40014":{
+        "text":"로그인 먼저 하시오",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40015":{
+        "text":"로그인 먼저 하시오",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40016":{
+        "text":"로그인 먼저 하시오",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40017":{
+        "text":"로그인 먼저 하시오",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40018":{
+        "text":"로그인 먼저 하시오",
+        "reason":"UNDEFINED_ERROR"
+    },
+    "40019":{
+        "text":"로그인 먼저 하시오",
+        "reason":"UNDEFINED_ERROR"
+    }
+}

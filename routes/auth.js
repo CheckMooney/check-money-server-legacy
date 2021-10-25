@@ -1,68 +1,114 @@
-let express = require('express');
-// let models = require("../models");
-const bcrypt = require('bcrypt');
+const express = require('express');
+const { upload } = require('../utils/upload.js');
+const emailController = require('../controllers/email');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const controller = require('../controllers/auth');
 
-let router = express.Router();
+const router = express.Router();
 
-let jwt = require("jsonwebtoken")
-let secretObj = require("../config/jwt");
+router.post('/join', controller.join);
 
-router.post('/join/:email/:nick/:password', async (req, res, next) => {
-  // const { email, nick, password } = req.body;
-  const email = req.params.email;
-  const nick = req.params.nick;
-  const password = req.params.password;
+router.post('/request/email', emailController.sendEmailToJoin);
 
-  try {
-    // const exUser = await User.findOne({ where: { email } });
-    // if (exUser) {
-    //   return res.redirect('/join?error=exist');
-    // }
-    // const hash = await bcrypt.hash(password, 12);
-    // await User.create({
-    //   email,
-    //   nick,
-    //   password: hash,
-    // });
-    console.log(email, nick, password);
-    // return res.redirect('/');
-  } catch (error) {
-    console.error(error);
-    return next(error);
-  }
-})
+// router.post('/request/email-pwd', emailController.sendEmailForPwd);
 
+router.post('/confirm', controller.emailConfirm);
 
+router.post('/login/email', controller.login);
 
+router.post('/login/guest', controller.guestLogin);
 
-router.post("/login",(req, res, next)=>{
-    let token = jwt.sign({
-        email: "aaa@example.com"
-    },
-    secretObj.secret , 
-    {
-        expiresIn: '5m'
-    })
+router.post('/login/google', controller.guestLogin);
 
+router.post('/logout', isLoggedIn, controller.logout);
 
-// models.user.find({
-//     where: {
-//       email: "aaa@example.com"
-//     }
-//   })
-//   .then( user => {
-//     if(user.pwd === "1234"){
-//       res.cookie("user", token);
-//       res.json({
-//         token: token
-//       })
-//     }
-//   })
+router.post('/delete', isLoggedIn, controller.deleteUser);
 
-    res.cookie("user", token);
-    res.json({
-      token: token
-    })
-});
+router.post('/find-pwd', controller.findPassword);
+
+router.post('/refresh', isLoggedIn, controller.refresh);
+
+const {OAuth2Client} = require('google-auth-library');
+const CLIENT_IDS = [
+  process.env.CLIENT_ID1,
+  process.env.CLIENT_ID2,
+  process.env.CLIENT_ID3
+]
+const client = new OAuth2Client(CLIENT_IDS);
+
+const verify = async (idToken) => {
+    const ticket = await client.verifyIdToken({
+        idToken: idToken,
+        audience: CLIENT_IDS,  // Specify the CLIENT_ID of the app that accesses the backend
+        // Or, if multiple clients access the backend:
+        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+    });
+    const payload = ticket.getPayload();
+    // const userid = payload['sub'];
+    // If request specified a G Suite domain:
+    // const domain = payload['hd'];
+    return payload;
+}
+
+router.post('/login/google', async (req, res, next) => {
+    const { id_token } = req.body;
+  
+    try {
+      const payload = await verify(id_token);
+      console.log(payload);
+      if (!payload) {
+        throw new Error("")
+      }
+  
+      const exUser = await User.findOne({ where: { sns_id: payload.sub } });
+      if (exUser) {  
+        const userId = exUser.id;
+        const provider = exUser.dataValues.provider;
+        const name = exUser.dataValues.name;
+        const email = exUser.dataValues.email;
+  
+        const token = jwt.sign(
+          {
+            userId,
+            email,
+            provider,
+            name,
+          },
+          secretObj.secret,
+          {
+            expiresIn: '30m',
+          },
+        );
+  
+        res.cookie('user', token);
+        res.json({
+          result : true,
+        //   userId,
+        //   email,
+        //   provider,
+        //   name,
+          token,
+        });
+      } else {
+        const newUser = await User.create({
+          sns_email: payload.email,
+          sns_id: payload.sub,
+          provider: 'google',
+          img_url: payload.picture,
+          name: payload.name || 'defalt name',
+        });
+        res.json({
+          result: true,
+        //   sns_id: payload.sub,
+          state: 0,
+          text: 'userType, name 인증 필요',
+        });
+      }
+    } catch {
+      return res
+        .status(403)
+        .json({ result: false, state: 1, text: '잘못된 인증' });
+    }
+  });
 
 module.exports = router;

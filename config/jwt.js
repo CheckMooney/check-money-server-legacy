@@ -1,3 +1,3 @@
 let jwtobj = {};
-jwtobj.secret = "able";
+jwtobj.secret = process.env.JWT_SECRET || "test";
 module.exports = jwtobj;
