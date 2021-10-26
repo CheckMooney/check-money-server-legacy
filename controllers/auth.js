@@ -162,7 +162,6 @@ const guestLogin = async (req, res, next) => {
       where: { device_token: deviceToken },
       defaults: {
         license: 0,
-        lang,
         name: 'user',
         user_type: 0,
         push_token: pushToken,

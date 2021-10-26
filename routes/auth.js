@@ -18,7 +18,7 @@ router.post('/login/email', controller.login);
 
 router.post('/login/guest', controller.guestLogin);
 
-router.post('/login/google', controller.guestLogin);
+// router.post('/login/google', controller.guestLogin);
 
 router.post('/logout', isLoggedIn, controller.logout);
 
