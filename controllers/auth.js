@@ -8,7 +8,6 @@ const join = async (req, res, next) => {
   let {
     name, email, password, deviceToken,
   } = req.body;
-  userType = parseInt(userType);
 
   try {
     const exUser = await User.findOne({ where: { email } });
@@ -29,7 +28,7 @@ const join = async (req, res, next) => {
 
     if (deviceToken) {
       const exDevice = await User.findOne({ where: { device_token: deviceToken } });
-      if (exDevice && userType === 0) {
+      if (exDevice) {
         const exDeviceUserId = exDevice.id;
         await User.update({
           name,
@@ -111,7 +110,6 @@ const login = async (req, res, next) => {
     }
 
     const userId = user.id;
-    const userType = user.user_type;
     const { provider } = user;
     const { name } = user;
 
@@ -119,7 +117,7 @@ const login = async (req, res, next) => {
       {
         userId,
         email,
-        userType,
+
         provider,
       },
       secretObj.secret,
@@ -174,14 +172,12 @@ const guestLogin = async (req, res, next) => {
     console.log(user[0].id);
 
     const userId = user[0].id;
-    const userType = user[0].user_type;
     const provider = 'local';
 
     const token = jwt.sign(
       {
         userId,
         email: null,
-        userType,
         provider,
       },
       secretObj.secret,
@@ -344,7 +340,6 @@ const refresh = async (req, res, next) => {
     }
     const userId = user.id;
     const { email } = user;
-    const userType = user.user_type;
     const { provider } = user;
     const badgeCount = user.push_count;
     
@@ -352,7 +347,6 @@ const refresh = async (req, res, next) => {
       {
         userId,
         email,
-        userType,
         provider,
       },
       secretObj.secret,
@@ -375,7 +369,6 @@ const refresh = async (req, res, next) => {
       userId,
       token,
       email,
-      userType,
       provider,
       badgeCount,
     });

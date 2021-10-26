@@ -593,7 +593,7 @@ const getPostList = async (req, res, next) => {
 const getPostDetail = async (req, res, next) => {
   try {
     const id = req.params.postid;
-    const { userType } = req.decoded;
+
 
     const exPost = await Post.findOne({
       where: { id },
