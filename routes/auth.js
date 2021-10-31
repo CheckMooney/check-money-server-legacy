@@ -57,7 +57,9 @@ router.post('/login/google', async (req, res, next) => {
       const payload = await verify(id_token);
       console.log(payload);
       if (!payload) {
-        throw new Error("")
+        return res
+        .status(403)
+        .json({ result: false, text: '인증 실패' });
       }
   
       const exUser = await User.findOne({ where: { sns_id: payload.sub } });
