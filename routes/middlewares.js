@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const secretObj = require('../config/jwt');
 const { User } = require('../models');
 
 exports.isLoggedIn = (req, res, next) => {
@@ -7,19 +6,31 @@ exports.isLoggedIn = (req, res, next) => {
     req.cookies?.user || req.headers?.authorization?.split('Bearer ')[1];
   if (token) {
     try {
-      let decoded = jwt.verify(token, secretObj.secret);
+      let decoded = jwt.verify(token, process.env.JWT_SECRET);
       // console.log('userId:' + decoded.userId);
       if (decoded) {
         req.decoded = decoded;
         next();
       } else {
-        res.status(401).json({ result: false, text: '로그인 필요' });
+        res.status(401).json({
+          "result" : false,
+          "code" : 40100, 
+          "message": "AUTH_FAIL"
+        });
       }
     } catch {
-      res.status(401).json({ result: false, text: 'TokenExpired 세션만료' });
+      res.status(403).json({
+        "result" : false,
+        "code" : 40300, 
+        "message": "TOKEN_EXPIRED"
+      });
     }
   } else {
-    res.status(401).json({ result: false, text: '로그인 필요' });
+    res.status(401).json({
+      "result" : true,
+      "code" : 40100, 
+      "message": "AUTH_FAIL"
+    });
   }
 };
 

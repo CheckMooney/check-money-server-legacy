@@ -27,8 +27,8 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false}));
 app.use(cookieParser())
-app.use(helmet());
 app.use(cors());
+app.use(helmet());
 
 app.use('/api',router.indexRouter);
 app.use('/api/auth',router.authRouter);
@@ -41,6 +41,7 @@ app.use((req, res, next) => {
   });
 
 app.use((err, req, res, next) => {
+    console.error(err);
     res.status(err.status || 500);
     res.send(`${err.message} ${process.env.NODE_ENV !== 'production' ? err : {}}`);
 });

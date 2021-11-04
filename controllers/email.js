@@ -12,7 +12,11 @@ exports.sendEmailToJoin = async (req, res) => {
     const { email } = req.body;
     console.log(email);
     if(!email){
-      res.status(400).json({ result: false, text: 'email needed' });
+      res.status(400).json({
+        "result" : false,
+        "code" : 40400, 
+        "message": "VALIDATION_ERROR"
+      });
     }
 
     const authNum = genRandom(111111, 999999);
@@ -21,16 +25,16 @@ exports.sendEmailToJoin = async (req, res) => {
     let exUser = await User.findOne({ where: { email }, paranoid: false });
     if (exUser) {
       if (exUser.isSoftDeleted) {
-        return res.status(404).json({
-          result: false,
-          state: 40301,
-          text: 'This account has been withdrawn. Please use another email',
+        return res.status(400).json({
+          "result" : false,
+          "code" : 40001, 
+          "message": "WITHDRAWN"
         });
       }
-      return res.status(404).json({
-        result: false,
-        state: 40302,
-        text: 'account already exists ',
+      return res.status(400).json({
+        "result" : false,
+        "code" : 40002, 
+        "message": "ALREADY_EXIST"
       });
     }
 
@@ -60,11 +64,19 @@ exports.sendEmailToJoin = async (req, res) => {
 
     const info = await transporter.sendMail(mailOptions);
     console.log('Finish sending email : ' + info.response);
-    res.send({ result: true });
+    res.send({ 
+      result : true,
+      code : 20000, 
+      message: "OK"
+    });
     transporter.close();
   } catch (error) {
     console.log(error);
-    res.status(500).json({ result: false, text: '이메일 전송 실패' });
+    res.status(500).json({
+      "result" : false,
+      "code" : 50000, 
+      "message": "ERROR"
+    });
   }
 };
 
