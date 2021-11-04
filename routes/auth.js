@@ -26,7 +26,7 @@ router.post('/delete', isLoggedIn, controller.deleteUser);
 
 router.post('/find-pwd', controller.findPassword);
 
-router.post('/refresh', isLoggedIn, controller.refresh);
+router.post('/refresh', controller.refresh);
 
 
 module.exports = router;
