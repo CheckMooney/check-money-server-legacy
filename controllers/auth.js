@@ -92,7 +92,11 @@ const emailConfirm = async (req, res, next) => {
               where: { email },
             },
           );
-          res.json({ result: true });
+          res.json({
+            result: true,
+            code : 20000, 
+            message: "OK",
+          });
         } else {
           res
             .status(400)
