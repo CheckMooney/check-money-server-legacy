@@ -138,7 +138,9 @@ const login = async (req, res, next) => {
       where: { email },
     });
     if (!user) {
-      return res.json({
+      return res
+      .status(400)
+      .json({
         "result" : false,
         "code" : 40007, 
         "message": "USER_NOT_FOUND"
@@ -187,7 +189,9 @@ const login = async (req, res, next) => {
         },
       );
     } else {
-      return res.json({
+      return res
+      .status(400)
+      .json({
         "result" : false,
         "code" : 40008, 
         "message": "INCORRECT_PASSWORD"
@@ -251,7 +255,7 @@ const googleLogin = async (req, res, next) => {
     console.log(payload);
     if (!payload) {
       return res
-      .status(403)
+      .status(400)
       .json({
         "result" : false,
         "code" : 40009, 
@@ -305,7 +309,7 @@ const googleLogin = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     res
-    .status(403)
+    .status(400)
     .json({
       "result" : false,
       "code" : 40009, 
@@ -398,7 +402,7 @@ const findPassword = async (req, res, next) => {
 
 const refresh = async (req, res, next) => {
   try {
-    const { access_token, refresh_token } = req.body;
+    const { user_id, refresh_token } = req.body;
     
     let decoded = jwt.verify(refresh_token, process.env.REFRESH_JWT_SECRET);
 
@@ -408,7 +412,7 @@ const refresh = async (req, res, next) => {
       where: { id: userId },
     });
 
-    const token = jwt.sign(
+    const new_access_token = jwt.sign(
       {
         userId,
         email: user.email,
@@ -432,7 +436,7 @@ const refresh = async (req, res, next) => {
       result: true,
       code : 20000, 
       message: "OK",
-      token,
+      access_token : new_access_token,
       refresh_token: new_refresh_token
     });
     // User.update(
@@ -557,146 +561,3 @@ module.exports = {
   refresh,
   googleLogin
 };
-
-
-// router.post('/kakao', async (req, res, next) => {
-//   const { accessToken } = req.body;
-//   console.log(accessToken);
-
-//   const getUserData = async () => {
-//     try {
-//       return axios.get('https://kapi.kakao.com/v2/user/me', {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//         },
-//       });
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-//   try {
-//     const profile = await getUserData();
-//     console.log(profile.data);
-
-//     const exUser = await User.findOne({ where: { sns_id: profile.data.id } });
-//     if (exUser) {
-//       console.log(exUser.user_type);
-//       if (exUser.user_type == null) {
-//         return res.json({
-//           result: true,
-//           sns_id: profile.data.id,
-//           state: 0,
-//           text: 'userType, name 인증 필요',
-//         });
-//       }
-
-//       const userId = exUser.id;
-//       const userType = exUser.user_type;
-//       const provider = exUser.provider;
-//       const name = exUser.name;
-//       const email = exUser.email;
-
-//       const token = jwt.sign(
-//         {
-//           userId,
-//           email,
-//           userType,
-//           provider,
-//           name,
-//         },
-//         secretObj.secret,
-//         {
-//           expiresIn: '365d',
-//         },
-//       );
-//       res.cookie('user', token);
-//       res.json({
-//         userId,
-//         email,
-//         userType,
-//         provider,
-//         name,
-//         state: 1,
-//         token,
-//       });
-//     } else {
-//       const newUser = await User.create({
-//         sns_email: profile.kakao_account && profile.kakao_account.email,
-//         sns_id: profile.data.id,
-//         provider: 'kakao',
-//       });
-//       res.json({
-//         result: true,
-//         sns_id: profile.data.id,
-//         state: 0,
-//         text: 'userType, name 인증 필요',
-//       });
-//     }
-//   } catch {
-//     return res
-//       .status(403)
-//       .json({ result: false, state: 1, text: '잘못된 인증' });
-//   }
-// });
-
-// router.post('/usertype', async (req, res, next) => {
-//   const { snsId, userType, name } = req.body;
-//   console.log(snsId, userType, name);
-//   try {
-//     const exUser = await User.findOne({ where: { sns_id: snsId } });
-//     if (exUser) {
-//       await User.update(
-//         {
-//           user_type: userType,
-//           name,
-//         },
-//         {
-//           where: { sns_id: snsId },
-//         },
-//       );
-
-//       const userId = exUser.id;
-//       const userType = exUser.dataValues.user_type;
-//       const provider = exUser.dataValues.provider;
-//       const name = exUser.dataValues.name;
-//       const email = exUser.dataValues.email;
-
-//       const token = jwt.sign(
-//         {
-//           userId,
-//           email,
-//           userType,
-//           provider,
-//           name,
-//         },
-//         secretObj.secret,
-//         {
-//           expiresIn: '365d',
-//         },
-//       );
-
-//       res.cookie('user', token);
-//       console.log(exUser);
-
-//       res.json({
-//         userId,
-//         email,
-//         userType,
-//         provider,
-//         name,
-//         state: 1,
-//         token,
-//       });
-//     } else {
-//       return res
-//         .status(403)
-//         .json({ result: false, state: 0, text: '로그인 먼저 하시오' });
-//     }
-//   } catch {
-//     return res
-//       .status(403)
-//       .json({ result: false, state: 1, text: '잘못된 인증' });
-//   }
-// });
-

@@ -12,7 +12,7 @@ exports.sendEmailToJoin = async (req, res) => {
     const { email } = req.body;
     console.log(email);
     if(!email){
-      res.status(400).json({
+      res.status(404).json({
         "result" : false,
         "code" : 40400, 
         "message": "VALIDATION_ERROR"
