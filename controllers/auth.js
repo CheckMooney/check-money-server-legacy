@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
-const { User, AuthNum, Post } = require('../models');
+const { User, AuthNum } = require('../models');
 const hash = require('../utils/hash');
 const google = require('../utils/google');
-const axios = require('axios'); //for kakao login
 
 const join = async (req, res, next) => {
   let {

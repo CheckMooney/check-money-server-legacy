@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
 const User = require('./user');
-const Post = require('./post');
-const Comment = require('./comment');
+const Account = require('./account');
+const Transaction = require('./transaction');
 const AuthNum = require('./authNum');
-const PostImg = require('./postImg');
+
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env];
@@ -20,21 +20,21 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.User = User;
-db.Post = Post;
-db.Comment = Comment;
+db.Account = Account;
+db.Transaction = Transaction;
 db.AuthNum = AuthNum;
-db.PostImg = PostImg;
+// db.PostImg = PostImg;
 
 
 User.init(sequelize);
-Post.init(sequelize);
-Comment.init(sequelize);
+Account.init(sequelize);
+Transaction.init(sequelize);
 AuthNum.init(sequelize);
-PostImg.init(sequelize);
+// PostImg.init(sequelize);
 
 User.associate(db);
-Post.associate(db);
-Comment.associate(db);
-PostImg.associate(db);
+Account.associate(db);
+Transaction.associate(db);
+// PostImg.associate(db);
 
 module.exports = db;

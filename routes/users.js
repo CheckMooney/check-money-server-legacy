@@ -13,6 +13,6 @@ router.get('/:userid', isLoggedIn, controller.getUserInfo);
 
 router.post('/my-info', isLoggedIn, controller.modifyMyInfo);
 
-router.post('/majors', isLoggedIn, controller.modifyMyMajor);
+// router.post('/majors', isLoggedIn, controller.modifyMyMajor);
 
 module.exports = router;
