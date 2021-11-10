@@ -24,7 +24,7 @@ exports.sendEmailToJoin = async (req, res) => {
 
     let exUser = await User.findOne({ where: { email }, paranoid: false });
     if (exUser) {
-      if (exUser.isSoftDeleted) {
+      if (exUser.isSoftDeleted()) {
         return res.status(400).json({
           "result" : false,
           "code" : 40001, 

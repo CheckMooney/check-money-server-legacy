@@ -1,9 +1,9 @@
 const express = require('express');
 const { isLoggedIn } = require('./middlewares');
 const authRouter = require('./auth');
-const postsRouter = require('./posts');
+const accountsRouter = require('./accounts');
 const usersRouter = require('./users');
-const commentsRouter = require('./comments');
+const transactionsRouter = require('./transactions');
 
 let router = express.Router();
 
@@ -14,7 +14,7 @@ router.get('/', isLoggedIn, function (req, res, next) {
 module.exports = {
   indexRouter: router,
   authRouter,
-  postsRouter,
+  accountsRouter,
   usersRouter,
-  commentsRouter,
+  transactionsRouter,
 };

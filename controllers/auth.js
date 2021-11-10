@@ -149,7 +149,7 @@ const login = async (req, res, next) => {
     const userId = user.id;
     const { provider } = user;
 
-    const token = jwt.sign(
+    const access_token = jwt.sign(
       {
         userId,
         email,
@@ -169,12 +169,12 @@ const login = async (req, res, next) => {
     );
 
     if (await hash.compareHash(password, user.password)) {
-      res.cookie('user', token);
+      res.cookie('user', access_token);
       res.json({
         result: true,
         code : 20000, 
         message: "OK",
-        token,
+        access_token,
         refresh_token
       });
       User.update(
@@ -278,7 +278,7 @@ const googleLogin = async (req, res, next) => {
     const provider = exUser.dataValues.provider;
     const email = exUser.dataValues.email;
 
-    const token = jwt.sign(
+    const access_token = jwt.sign(
       {
         userId,
         email,
@@ -297,12 +297,12 @@ const googleLogin = async (req, res, next) => {
       {},
     );
 
-    res.cookie('user', token);
+    res.cookie('user', access_token);
     res.json({
       result: true,
       code : 20000, 
       message: "OK",
-      token,
+      access_token,
       refresh_token
     });
   } catch (error) {
@@ -430,7 +430,7 @@ const refresh = async (req, res, next) => {
       {},
     );
 
-    res.cookie('user', token);
+    res.cookie('user', new_access_token);
     res.json({
       result: true,
       code : 20000, 
