@@ -1,7 +1,7 @@
 const express = require('express');
 // const { upload, upload2 } = require('../utils/upload.js');
-// const { isLoggedIn, hasLisence, isAdmin } = require('./middlewares');
-// const controller = require('../controllers/posts');
+const { isLoggedIn } = require('./middlewares');
+const controller = require('../controllers/accounts');
 
 const router = express.Router();
 
@@ -12,20 +12,41 @@ const router = express.Router();
 //   controller.sendFileNames,
 // ); //다중 이미지 업로드
 
-// router.get(
-//   '/cotreat-request',
-//   isLoggedIn,
-//   hasLisence,
-//   controller.getCoTreatRequestList,
-// ); //협진요청 리스트
+router.get(
+  '/',
+  isLoggedIn,
+  controller.getAccounts,
+);
 
 // router.get(
-//   '/cotreat-accept',
+//   '/accounts/:accountId',
 //   isLoggedIn,
-//   hasLisence,
-//   controller.getCoTreatAcceptList,
-// ); //협진수락 리스트
+//   controller.getAccountDetail,
+// );
 
+router.post(
+    '/',
+    isLoggedIn,
+    controller.createAccount,
+);
+  
+router.put(
+    '/:accountId',
+    isLoggedIn,
+    controller.updateAccount,
+);
+
+router.delete(
+    '/:accountId',
+    isLoggedIn,
+    controller.deleteAccount,
+);
+
+router.get(
+    '/:accountId/transactions',
+    isLoggedIn,
+    controller.getTransactions,
+  );
 // router.get('/anytreat/users/:userid', isLoggedIn, controller.getPostListByUser); //모든 진료에대해 해당 유저가 쓴 포스트 리스트
 
 // router.get(

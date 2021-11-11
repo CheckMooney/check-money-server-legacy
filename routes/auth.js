@@ -22,9 +22,9 @@ router.post('/login/google', controller.googleLogin);
 
 router.post('/logout', isLoggedIn, controller.logout);
 
-router.post('/delete', isLoggedIn, controller.deleteUser);
+// router.post('/delete', isLoggedIn, controller.deleteUser);
 
-router.post('/find-pwd', controller.findPassword);
+// router.post('/find-pwd', controller.findPassword);
 
 router.post('/refresh', controller.refresh);
 

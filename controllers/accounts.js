@@ -1,31 +1,129 @@
-// const { User, Sequelize } = require('../models');
-// const holderText = `Where does it hurt? If you write down the symptoms you are experiencing in detail, Happy doctor will provide you with detailed medical advice. If you want, you can take a picture of the affected area and attach it as a picture. (Happy doctor's medical consultation is free of charge, and answers are made by a doctor-licensed specialist. However, for accurate diagnosis and prescription, it is recommended that you seek medical attention.)`
+const { Account, Transaction , User, Sequelize } = require('../models');
 
-// const sendFileNames = (req, res) => {
-//   console.log(req.files);
-//   const filenames = [];
-//   for (const file of req.files) {
-//     filenames.push(`/img/${file.filename}`);
-//   }
-//   res.json({ result: true, urls: filenames });
-// };
+exports.getAccounts = async (req, res, next) => {
+  try{
+    let { page = 1, limit = 10} = req.query;
+    if (limit > 100) limit = 99;
+    const offset = page > 1 ? (page - 1) * limit : 0;
 
-// // const getHolderText = async (req, res, next) => {
-// //   const lang = req.params.lang;
-// //   try {
-// //     try{
-// //       if(!lang){ lang = 'en' }
-// //       let holderTranslation = await getTranslation(holderText, lang);
-// //       holderTranslation = holderTranslation[0].translatedText;
-// //       res.json({ result: true, holderText, holderTranslation })
-// //     }catch{
-// //       res.json({ result: true, holderText, holderTranslation : holderText })
-// //     }
-// //   } catch {
-// //     console.log(error);
-// //     next(error);
-// //   }
-// // }
+    const {rows, count} = await Account.findAndCountAll({
+      where : {
+        user_id: req.decoded.user_id
+      },
+      distinct: true,
+      limit,
+      offset,
+      attributes : ["id", "title", "description", "createdAt" ]
+    })
+
+    res.json({
+      "result" : true,
+      "code" : 20000, 
+      "message": "OK",
+      "rows": rows,
+      "count" : count  
+    });
+  }catch(error) {
+    console.error(error);
+    next(error);
+  }
+}
+
+// exports.getAccountDetail =  (req, res) => {
+// }
+
+exports.createAccount = async (req, res, next) => {
+  try{
+    const { title = "내 지갑", description = ""} = req.body;
+
+    const account = await Account.create({
+      title,
+      description,
+      user_id: req.decoded.user_id
+    })
+
+    res.json({
+      "result" : true,
+      "code" : 20000, 
+      "message": "OK",
+      "id": account.id,
+    });
+  }catch(error) {
+    console.error(error);
+    next(error);
+  }
+}
+
+exports.updateAccount = async (req, res, next) => {
+  try{
+    const { title , description } = req.body;
+    const { accountId } = req.params;
+
+    await Account.update({
+      ...(title ? {title} : {}),
+      ...(description ? {description} : {}),
+    },{
+      where: { id : accountId}
+    })
+
+    res.json({
+      "result" : true,
+      "code" : 20000, 
+      "message": "OK",
+    });
+  }catch(error) {
+    console.error(error);
+    next(error);
+  }
+}
+
+exports.deleteAccount = async (req, res, next) => {
+  try{
+    const { accountId } = req.params;
+
+    await Account.destroy({
+      where: { id : accountId}
+    })
+
+    res.json({
+      "result" : true,
+      "code" : 20000, 
+      "message": "OK",
+    });
+  }catch(error) {
+    console.error(error);
+    next(error);
+  }
+}
+
+exports.getTransactions = async (req, res, next) => {
+  try{
+    let { page = 1, limit = 10} = req.query;
+    if (limit > 100) limit = 99;
+    const offset = page > 1 ? (page - 1) * limit : 0;
+
+    // const {rows, count} = await Transaction.findAndCountAll({
+    //   where : {
+    //     user_id: req.decoded.user_id
+    //   },
+    //   distinct: true,
+    //   limit,
+    //   offset,
+    // })
+
+    res.json({
+      "result" : true,
+      "code" : 20000, 
+      "message": "OK",
+      // "rows": rows,
+      // "count" : count  
+    });
+  }catch(error) {
+    console.error(error);
+    next(error);
+  }
+}
+
   
 // const treatRequest = async (req, res, next) => {
 //   let { title, body, img_url, img_urls } = req.body;
@@ -909,22 +1007,4 @@
 //     console.log(error);
 //     next(error);
 //   }
-// };
-
-// module.exports = {
-//   // sendFileNames,
-//   // treatRequest,
-//   // getTreatRequestList,
-//   // getTreatAcceptList,
-//   // getCoTreatRequestList,
-//   // getCoTreatAcceptList,
-//   // getPostListByUser,
-//   // getPostListByDoc,
-//   // getPostListByCoDoc,
-//   // getPostList,
-//   // getPostDetail,
-//   // deletePost,
-//   // askAdmin,
-//   // getAskingAdminList,
-//   // acceptAskingAdmin,
 // };

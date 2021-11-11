@@ -146,12 +146,12 @@ const login = async (req, res, next) => {
       });
     }
 
-    const userId = user.id;
+    const user_id = user.id;
     const { provider } = user;
 
     const access_token = jwt.sign(
       {
-        userId,
+        user_id,
         email,
         provider,
       },
@@ -160,7 +160,7 @@ const login = async (req, res, next) => {
     );
     const refresh_token = jwt.sign(
       {
-        userId,
+        user_id,
         email,
         provider,
       },
@@ -183,7 +183,7 @@ const login = async (req, res, next) => {
         },
         {
           where: {
-            id: userId,
+            id: user_id,
           },
         },
       );
@@ -217,12 +217,12 @@ const guestLogin = async (req, res, next) => {
 
     console.log(user[0].id);
 
-    const userId = user[0].id;
+    const user_id = user[0].id;
     const provider = 'local';
 
     const token = jwt.sign(
       {
-        userId,
+        user_id,
         email: null,
         provider,
       },
@@ -235,7 +235,7 @@ const guestLogin = async (req, res, next) => {
     res.cookie('user', token);
     res.json({
       result: true,
-      userId,
+      user_id,
       token,
       email: null,
       provider,
@@ -274,13 +274,13 @@ const googleLogin = async (req, res, next) => {
       });
     }
 
-    const userId = exUser.id;
+    const user_id = exUser.id;
     const provider = exUser.dataValues.provider;
     const email = exUser.dataValues.email;
 
     const access_token = jwt.sign(
       {
-        userId,
+        user_id,
         email,
         provider,
       },
@@ -289,7 +289,7 @@ const googleLogin = async (req, res, next) => {
     );
     const refresh_token = jwt.sign(
       {
-        userId,
+        user_id,
         email,
         provider,
       },
@@ -322,7 +322,7 @@ const logout = (req, res, next) => {
   try {
     const exUser = User.findOne({
       where: {
-        id: req.decoded.userId,
+        id: req.decoded.user_id,
       },
     });
 
@@ -333,7 +333,7 @@ const logout = (req, res, next) => {
         },
         {
           where: {
-            id: req.decoded.userId,
+            id: req.decoded.user_id,
           },
         },
       );
@@ -350,7 +350,7 @@ const logout = (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
   try {
-    const exUser = await User.findOne({ where: { id: req.decoded.userId } });
+    const exUser = await User.findOne({ where: { id: req.decoded.user_id } });
 
     if (!exUser) {
       return res
@@ -405,15 +405,15 @@ const refresh = async (req, res, next) => {
     
     let decoded = jwt.verify(refresh_token, process.env.REFRESH_JWT_SECRET);
 
-    const userId = decoded.userId;
+    if(user_id !== decoded.user_id)throw new Error();;
     console.log(decoded);
     const user = await User.findOne({
-      where: { id: userId },
+      where: { id: user_id },
     });
 
     const new_access_token = jwt.sign(
       {
-        userId,
+        user_id,
         email: user.email,
         provider: user.provider,
       },
@@ -422,7 +422,7 @@ const refresh = async (req, res, next) => {
     );
     const new_refresh_token = jwt.sign(
       {
-        userId,
+        user_id,
         email: user.email,
         provider: user.provider,
       },
@@ -444,7 +444,7 @@ const refresh = async (req, res, next) => {
     //   },
     //   {
     //     where: {
-    //       id: userId,
+    //       id: user_id,
     //     },
     //   },
     // );
@@ -457,7 +457,7 @@ const refresh = async (req, res, next) => {
 // const refresh = async (req, res, next) => {
 //   try {
 //     const user = await User.findOne({
-//       where: { id: req.decoded.userId },
+//       where: { id: req.decoded.user_id },
 //     })
 //     let whereOption;
 //     if (user.user_type === 0) {
@@ -474,7 +474,7 @@ const refresh = async (req, res, next) => {
 //         push_count : pushCount
 //       }, {
 //         where: {
-//           id: req.decoded.userId
+//           id: req.decoded.user_id
 //       } });
 //     } else if (user.user_type === 1 || user.user_type > 400) {
 //       whereOption = { doc_id: user.id };
@@ -490,7 +490,7 @@ const refresh = async (req, res, next) => {
 //         push_count : pushCount
 //       }, {
 //         where: {
-//           id: req.decoded.userId
+//           id: req.decoded.user_id
 //       } });
 //     } else {
 //       whereOption = { codoc_id: user.id };
@@ -506,17 +506,17 @@ const refresh = async (req, res, next) => {
 //         push_count : pushCount
 //       }, {
 //         where: {
-//           id: req.decoded.userId
+//           id: req.decoded.user_id
 //       } });
 //     }
-//     const userId = user.id;
+//     const user_id = user.id;
 //     const { email } = user;
 //     const { provider } = user;
 //     const badgeCount = user.push_count;
     
 //     const token = jwt.sign(
 //       {
-//         userId,
+//         user_id,
 //         email,
 //         provider,
 //       },
@@ -532,12 +532,12 @@ const refresh = async (req, res, next) => {
 //       push_token: pushToken,
 //     }, {
 //       where: {
-//         id: req.decoded.userId,
+//         id: req.decoded.user_id,
 //       },
 //     });
 //     res.json({
 //       result: true,
-//       userId,
+//       user_id,
 //       token,
 //       email,
 //       provider,
