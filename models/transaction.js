@@ -4,7 +4,7 @@ module.exports = class Transaction extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        isConsumption: {
+        is_consumption: {
           type: Sequelize.INTEGER,
           allowNull: false,
           default: 0,

@@ -401,19 +401,17 @@ const findPassword = async (req, res, next) => {
 
 const refresh = async (req, res, next) => {
   try {
-    const { user_id, refresh_token } = req.body;
+    const { refresh_token } = req.body; //user_id
     
     let decoded = jwt.verify(refresh_token, process.env.REFRESH_JWT_SECRET);
 
-    if(user_id !== decoded.user_id)throw new Error();;
-    console.log(decoded);
     const user = await User.findOne({
-      where: { id: user_id },
+      where: { id: decoded.user_id },
     });
 
     const new_access_token = jwt.sign(
       {
-        user_id,
+        user_id: decoded.user_id,
         email: user.email,
         provider: user.provider,
       },
@@ -422,7 +420,7 @@ const refresh = async (req, res, next) => {
     );
     const new_refresh_token = jwt.sign(
       {
-        user_id,
+        user_id: decoded.user_id,
         email: user.email,
         provider: user.provider,
       },

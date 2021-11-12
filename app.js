@@ -34,6 +34,7 @@ app.use('/api',router.indexRouter);
 app.use('/api/auth',router.authRouter);
 app.use('/api/users',router.usersRouter);
 app.use('/api/accounts',router.accountsRouter);
+app.use('/api/transactions',router.transactionsRouter);
 
 
 app.use((req, res, next) => {

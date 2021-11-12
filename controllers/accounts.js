@@ -102,21 +102,24 @@ exports.getTransactions = async (req, res, next) => {
     if (limit > 100) limit = 99;
     const offset = page > 1 ? (page - 1) * limit : 0;
 
-    // const {rows, count} = await Transaction.findAndCountAll({
-    //   where : {
-    //     user_id: req.decoded.user_id
-    //   },
-    //   distinct: true,
-    //   limit,
-    //   offset,
-    // })
+    const { accountId } = req.params
+
+    const {rows, count} = await Transaction.findAndCountAll({
+      where : {
+        account_id: accountId
+      },
+      distinct: true,
+      limit,
+      offset,
+      attributes: ["id","is_consumption", "price", "detail", "date" , "category", "account_id" ]
+    })
 
     res.json({
       "result" : true,
       "code" : 20000, 
       "message": "OK",
-      // "rows": rows,
-      // "count" : count  
+      "rows": rows,
+      "count" : count  
     });
   }catch(error) {
     console.error(error);
