@@ -175,7 +175,9 @@ const login = async (req, res, next) => {
         code : 20000, 
         message: "OK",
         access_token,
-        refresh_token
+        refresh_token,
+        user_id,
+        name: user.name
       });
       User.update(
         {
@@ -303,7 +305,9 @@ const googleLogin = async (req, res, next) => {
       code : 20000, 
       message: "OK",
       access_token,
-      refresh_token
+      refresh_token,
+      user_id,
+      name: exUser.name
     });
   } catch (error) {
     console.error(error);
@@ -434,7 +438,9 @@ const refresh = async (req, res, next) => {
       code : 20000, 
       message: "OK",
       access_token : new_access_token,
-      refresh_token: new_refresh_token
+      refresh_token: new_refresh_token,
+      user_id: user.id,
+      name: user.name
     });
     // User.update(
     //   {
