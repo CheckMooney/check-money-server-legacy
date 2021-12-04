@@ -16,7 +16,7 @@ router.post('/confirm', controller.emailConfirm);
 
 router.post('/login/email', controller.login);
 
-router.post('/login/guest', controller.guestLogin);
+// router.post('/login/guest', controller.guestLogin);
 
 router.post('/login/google', controller.googleLogin);
 

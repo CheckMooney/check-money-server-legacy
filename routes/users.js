@@ -9,10 +9,6 @@ router.post('/img', isLoggedIn, upload.single('img'), controller.sendFileName);
 
 router.get('/my-info', isLoggedIn, controller.getMyInfo);
 
-router.get('/:userid', isLoggedIn, controller.getUserInfo);
-
-router.post('/my-info', isLoggedIn, controller.modifyMyInfo);
-
-// router.post('/majors', isLoggedIn, controller.modifyMyMajor);
+router.put('/my-info', isLoggedIn, controller.modifyMyInfo);
 
 module.exports = router;
