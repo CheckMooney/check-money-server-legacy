@@ -99,7 +99,9 @@ exports.deleteAccount = async (req, res, next) => {
 exports.getTransactions = async (req, res, next) => {
   try{
     let { page = 1, limit = 10} = req.query;
-    if (limit > 100) limit = 99;
+    page = Number(page);
+    limit = Number(limit);
+    if (limit > 1000) limit = 999;
     const offset = page > 1 ? (page - 1) * limit : 0;
 
     const { accountId } = req.params
@@ -123,7 +125,14 @@ exports.getTransactions = async (req, res, next) => {
       limit,
       offset,
       order: [[column, direction]],
-      attributes: ["id","is_consumption", "price", "detail", "date" , "category", "account_id" ]
+      attributes: ["id","is_consumption", "price", "detail", "date" , "category", "account_id" ],
+      include : [{
+        model: Account,
+        as: 'account',
+        required: true,
+        attributes: [],
+        where: {user_id : req.decoded.user_id}
+      }]
     })
 
     res.json({

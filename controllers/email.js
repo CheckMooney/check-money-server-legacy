@@ -80,24 +80,33 @@ exports.sendEmailToJoin = async (req, res) => {
   }
 };
 
-exports.sendEmailForPwd = async (req, res) => {
+exports.sendEmailForpwd = async (req, res) => {
   try {
     const { email } = req.body;
     console.log(email);
+    if(!email){
+      res.status(404).json({
+        "result" : false,
+        "code" : 40400, 
+        "message": "VALIDATION_ERROR"
+      });
+    }
+
     const authNum = genRandom(111111, 999999);
     let emailTemplete =  JSON.stringify({ authCode: authNum });
 
-    let exUser = await User.findOne({ where: { email } });
-    console.log(exUser.deletedAt);
+    let exUser = await User.findOne({ where: { email }, paranoid: false });
     if (!exUser) {
-      return res
-        .status(404)
-        .json({ result: false, text: '존재하지 않는 이메일 계정입니다' });
+      return res.status(400).json({
+        "result" : false,
+        "code" : 40007, 
+        "message": "USER_NOT_FOUND"
+      });
     }
 
     const exAuth = await AuthNum.findOne({ where: { email } });
     if (exAuth) {
-      const postUpdated = await AuthNum.update(
+      await AuthNum.update(
         {
           auth: authNum,
         },
@@ -121,10 +130,18 @@ exports.sendEmailForPwd = async (req, res) => {
 
     const info = await transporter.sendMail(mailOptions);
     console.log('Finish sending email : ' + info.response);
-    res.send({ result: true });
+    res.send({ 
+      result : true,
+      code : 20000, 
+      message: "OK"
+    });
     transporter.close();
   } catch (error) {
     console.log(error);
-    res.status(500).json({ result: false, text: '이메일 전송 실패' });
+    res.status(500).json({
+      "result" : false,
+      "code" : 50000, 
+      "message": "ERROR"
+    });
   }
 };

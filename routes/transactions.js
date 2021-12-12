@@ -4,8 +4,7 @@ const { isLoggedIn } = require('./middlewares');
 const router = express.Router();
 const controller = require('../controllers/transactions');
 
-// router.post('/img', isLoggedIn, upload.single('img'), controller.sendFileName);
-// router.get('/', isLoggedIn, controller.getTransactions);
+router.get('/', isLoggedIn, controller.getTransactions);
 
 router.post('/', isLoggedIn, controller.createTransaction);
 

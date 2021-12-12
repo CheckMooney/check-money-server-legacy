@@ -10,7 +10,7 @@ router.post('/join', controller.join);
 
 router.post('/request/email', emailController.sendEmailToJoin);
 
-// router.post('/request/email-pwd', emailController.sendEmailForPwd);
+router.post('/request/email-for-pwd', emailController.sendEmailForpwd);
 
 router.post('/confirm', controller.emailConfirm);
 
@@ -24,7 +24,7 @@ router.post('/logout', isLoggedIn, controller.logout);
 
 // router.post('/delete', isLoggedIn, controller.deleteUser);
 
-// router.post('/find-pwd', controller.findPassword);
+router.post('/find-pwd', controller.findPassword);
 
 router.post('/refresh', controller.refresh);
 

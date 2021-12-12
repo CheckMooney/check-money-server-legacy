@@ -5,6 +5,57 @@ const { Account, Transaction , User, Sequelize } = require('../models');
 //   res.json({ result: true, url: `/img/${req.file.filename}` });
 // };
 
+exports.getTransactions = async (req, res, next) => {
+  try{
+    let { page = 1, limit = 10} = req.query;
+    page = Number(page);
+    limit = Number(limit);
+    if (limit > 1000) limit = 999;
+    const offset = (page > 1) ? ((page - 1) * limit) : 0;
+
+    let {column = 'date', direction='ASC', account_id, category, is_consumption, date} = req.query;
+
+    if (column !== 'date' && column !== 'category' && column !== 'is_consumption' ) {
+      column= 'date'
+    }
+    if (direction !== 'ASC' && direction !== 'DESC') {
+      direction= 'ASC'
+    }
+    
+    const {rows, count} = await Transaction.findAndCountAll({
+      where : {
+        ...(account_id ? {account_id} : {}),
+        ...(is_consumption ? {is_consumption} : {}),
+        ...(category ? {category} : {}),
+        ...(date ? {date : {[Sequelize.Op.substring]: date}} : {}),
+      },
+      distinct: true,
+      limit,
+      offset,
+      order: [[column, direction]],
+      attributes: ["id","is_consumption", "price", "detail", "date" , "category", "account_id" ],
+      include : [{
+        model: Account,
+        as: 'account',
+        required: true,
+        attributes: [],
+        where: {user_id : req.decoded.user_id}
+      }]
+    })
+
+    res.json({
+      "result" : true,
+      "code" : 20000, 
+      "message": "OK",
+      "rows": rows,
+      "count" : count  
+    });
+  }catch(error) {
+    console.error(error);
+    next(error);
+  }
+}
+
 exports.createTransaction = async (req, res, next) => {
     try{
       const {         

@@ -379,12 +379,20 @@ const findPassword = async (req, res, next) => {
 
     if (!exUser) {
       return res
-        .status(403)
-        .json({ result: false, state: 0, text: '존재하지 않는 아이디' });
+        .status(400)
+        .json({
+          "result" : false,
+          "code" : 40007, 
+          "message": "USER_NOT_FOUND"
+        });
     } if (!exAuth || exAuth.status != 1) {
       return res
-        .status(403)
-        .json({ result: false, state: 1, text: '이메일 인증 필요' });
+        .status(400)
+        .json({
+          "result" : false,
+          "code" : 40006, 
+          "message": "EMAIL_COMFIRM_NEEDED"
+        });
     }
     const hashedPwd = await hash.getHash(newPassword);
     await User.update(
@@ -396,7 +404,11 @@ const findPassword = async (req, res, next) => {
       },
     );
 
-    return res.status(201).json({ result: true, text: '비밀번호 변경 성공' });
+    return res.status(200).json({
+      "result" : true,
+      "code" : 20000, 
+      "message": "OK"
+    });
   } catch (error) {
     console.error(error);
     return next(error);
