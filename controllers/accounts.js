@@ -3,6 +3,8 @@ const { Account, Transaction , User, Sequelize } = require('../models');
 exports.getAccounts = async (req, res, next) => {
   try{
     let { page = 1, limit = 10} = req.query;
+    page = Number(page);
+    limit = Number(limit);
     if (limit > 100) limit = 99;
     const offset = page > 1 ? (page - 1) * limit : 0;
 
