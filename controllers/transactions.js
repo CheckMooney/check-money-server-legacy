@@ -102,7 +102,7 @@ try{
     const { transactionId } = req.params;
 
     await Transaction.update({
-    ...(is_consumption ? {is_consumption} : {}),
+    ...((is_consumption || is_consumption===0 ) ? {is_consumption} : {}),
     ...(price ? {price} : {}),
     ...(detail ? {detail} : {}),
     ...(date ? {date} : {}),
