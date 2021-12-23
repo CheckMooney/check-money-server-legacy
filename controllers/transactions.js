@@ -28,6 +28,7 @@ exports.getTransactions = async (req, res, next) => {
         ...(is_consumption ? {is_consumption} : {}),
         ...(category ? {category} : {}),
         ...(date ? {date : {[Sequelize.Op.substring]: date}} : {}),
+        type: 0
       },
       distinct: true,
       limit,

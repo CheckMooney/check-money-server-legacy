@@ -27,8 +27,13 @@ module.exports = class Transaction extends Sequelize.Model {
         category: {
           type: Sequelize.INTEGER,
           allowNull: false,
-          default: 0,
+          defaultValue: 0,
         },
+        type: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
+        }
       },
       {
         sequelize,

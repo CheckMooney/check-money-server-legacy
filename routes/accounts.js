@@ -42,4 +42,25 @@ router.get(
     controller.getTransactions,
   );
 
+router.get(
+  '/:accountId/subscriptions',
+  isLoggedIn,
+  controller.getSubscriptions,
+);
+router.post(
+  '/:accountId/subscriptions',
+  isLoggedIn,
+  controller.createSubscriptions,
+);
+router.put(
+  '/:accountId/subscriptions/:subscriptionId',
+  isLoggedIn,
+  controller.updateSubscriptions,
+);
+router.delete(
+  '/:accountId/subscriptions/:subscriptionId',
+  isLoggedIn,
+  controller.deleteSubscriptions,
+);
+
 module.exports = router;
