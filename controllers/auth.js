@@ -131,8 +131,8 @@ const emailConfirm = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
-    const { email, password, pushToken } = req.body;
-    console.log(email, password, pushToken);
+    const { email, password, push_token } = req.body;
+    // console.log(email, password, pushToken);
     const user = await User.findOne({
       where: { email },
     });
@@ -179,9 +179,9 @@ const login = async (req, res, next) => {
         user_id,
         name: user.name
       });
-      User.update(
+      await User.update(
         {
-          push_token: pushToken,
+          push_token: push_token,
         },
         {
           where: {
@@ -250,7 +250,7 @@ const guestLogin = async (req, res, next) => {
 };
 
 const googleLogin = async (req, res, next) => {
-  const { id_token } = req.body;
+  const { id_token ,push_token } = req.body;
   try {
     const payload = await google.verify(id_token);
     console.log(payload);
@@ -309,6 +309,17 @@ const googleLogin = async (req, res, next) => {
       user_id,
       name: exUser.name
     });
+
+    await User.update(
+      {
+        push_token,
+      },
+      {
+        where: {
+          id: user_id,
+        },
+      },
+    );
   } catch (error) {
     console.error(error);
     res
@@ -417,7 +428,7 @@ const findPassword = async (req, res, next) => {
 
 const refresh = async (req, res, next) => {
   try {
-    const { refresh_token } = req.body; //user_id
+    const { refresh_token, push_token } = req.body; //user_id
     
     let decoded = jwt.verify(refresh_token, process.env.REFRESH_JWT_SECRET);
 
@@ -454,16 +465,16 @@ const refresh = async (req, res, next) => {
       user_id: user.id,
       name: user.name
     });
-    // User.update(
-    //   {
-    //     push_token,
-    //   },
-    //   {
-    //     where: {
-    //       id: user_id,
-    //     },
-    //   },
-    // );
+    await User.update(
+      {
+        push_token,
+      },
+      {
+        where: {
+          id: decoded.user_id,
+        },
+      },
+    );
 
   } catch (error) {
     console.error(error);

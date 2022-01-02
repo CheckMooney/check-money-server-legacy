@@ -12,7 +12,7 @@ const sendFileName = (req, res) => {
 
 const getMyInfo = async (req, res, next) => {
   try {
-    console.log(req.decoded);//
+    // console.log(req.decoded);//?
     const user = await User.findOne({
       attributes: { exclude: ['password', 'online', 'push_token', 'device_token', 'sns_id', 'sns_email', 'push_alarm', 'createdAt','updatedAt','deletedAt'] },
       where: { id: req.decoded.user_id },
