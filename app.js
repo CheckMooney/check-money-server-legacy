@@ -30,6 +30,9 @@ app.use(cookieParser())
 app.use(cors());
 app.use(helmet());
 
+app.get('/', function (req, res, next) {
+  res.status(200).send('OK');
+});
 app.use('/api',router.indexRouter);
 app.use('/api/auth',router.authRouter);
 app.use('/api/users',router.usersRouter);
