@@ -8,7 +8,7 @@ const development = {
   host: env.PUBLIC_MYSQL_HOST,
   dialect: env.MYSQL_DIALECT,
   port: env.MYSQL_PORT,
-  // logging: false,
+  logging: false,
 };
 
 const production = {
@@ -18,6 +18,7 @@ const production = {
   host: env.MYSQL_HOST,
   dialect: env.MYSQL_DIALECT,
   port: env.MYSQL_PORT,
+  logging: false,
 };
 
 const test = {

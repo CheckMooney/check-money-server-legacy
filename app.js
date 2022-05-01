@@ -9,7 +9,7 @@ var cookieParser = require('cookie-parser')
 dotenv.config();
 const router = require('./routes');
 const { sequelize } = require('./models');
-
+const schedule = require('./utils/schedule');
 const app = express();
 
 app.set('port', process.env.PORT || 3001);
@@ -21,7 +21,7 @@ sequelize.sync({ force: false, alter: false })
   .catch((err) => {
     console.error(err);
   });
-
+schedule.setSchedule();
 app.use(morgan('dev'));
 app.use('/api/img', express.static(path.join(__dirname, 'public/uploads')));
 app.use(express.json());
@@ -56,10 +56,8 @@ app.listen(app.get('port'), () => {
     console.log(app.get('port'), ' running');
 });
 
-
-
 /***************************************************/
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  // Application specific logging, throwing an error, or other logic here
+  // Application specific logging, throwing an error
 });

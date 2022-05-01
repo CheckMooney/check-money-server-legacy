@@ -42,9 +42,9 @@ const firebasePush = (notification, data, tokens) => {
 // };
 
 const firebasePushToUserId = async (notification, data, userIds) => {
-  let tokens = [];
+  const tokens = [];
   userIds.forEach(async element => {
-    let user = await User.findOne({ where: { id: element } });
+    const user = await User.findOne({ where: { id: element } });
     if (user?.push_token) tokens.push(user.push_token);
   });
   console.log(tokens);

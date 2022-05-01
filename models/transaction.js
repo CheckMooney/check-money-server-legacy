@@ -33,6 +33,7 @@ module.exports = class Transaction extends Sequelize.Model {
           type: Sequelize.INTEGER,
           allowNull: false,
           defaultValue: 0,
+          comment: '0 거래,1 자동거래'
         }
       },
       {
