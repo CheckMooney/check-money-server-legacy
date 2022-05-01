@@ -1,10 +1,5 @@
 const { Account, Transaction , User, Sequelize } = require('../models');
 
-// const sendFileName = (req, res) => {
-//   console.log(req.file);
-//   res.json({ result: true, url: `/img/${req.file.filename}` });
-// };
-
 exports.getTransactions = async (req, res, next) => {
   try{
     let { page = 1, limit = 10} = req.query;
@@ -68,7 +63,7 @@ exports.createTransaction = async (req, res, next) => {
         account_id
         } = req.body;
 
-        //account_id valiation
+        //TODO account_id valiation
   
       const transaction = await Transaction.create({
         is_consumption,

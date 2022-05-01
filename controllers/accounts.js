@@ -32,9 +32,6 @@ exports.getAccounts = async (req, res, next) => {
   }
 }
 
-// exports.getAccountDetail =  (req, res) => {
-// }
-
 exports.createAccount = async (req, res, next) => {
   try{
     const { title = "내 지갑", description = ""} = req.body;

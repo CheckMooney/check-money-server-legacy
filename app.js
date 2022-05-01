@@ -60,6 +60,6 @@ app.listen(app.get('port'), () => {
 
 /***************************************************/
 process.on('unhandledRejection', (reason, promise) => {
-  console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
   // Application specific logging, throwing an error, or other logic here
 });
